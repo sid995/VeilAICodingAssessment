@@ -347,17 +347,17 @@ const visibilityTrendsData = [
 ]
 
 const competitorColors = {
-  Vivora: "#3b82f6", // Blue
-  Trideer: "#f97316", // Orange
-  "Your Brand": "#eab308", // Yellow
-  URBNFit: "#10b981", // Green
-  "Live Infinitely": "#8b5cf6", // Purple
+  Vivora: "#FF7D55", // Primary warm orange
+  Trideer: "#FB7D5C", // Bright orange
+  "Your Brand": "#DE7053", // Coral
+  URBNFit: "#B86048", // Medium orange
+  "Live Infinitely": "#F0A490", // Peach
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-black text-white p-4 rounded-lg shadow-lg">
+      <div className="bg-[#1C1B19] text-white p-4 rounded-lg shadow-lg">
         <p className="font-semibold mb-2">{label}</p>
         {payload.map((entry: any, index: number) => {
           const competitor = competitorData.find((c) => c.brand === entry.name)
@@ -371,8 +371,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                   className="w-4 h-4"
                 />
               )}
-              <span className="text-gray-300">{entry.name}</span>
-              <span className="text-green-400 font-semibold ml-auto">{entry.value}</span>
+              <span className="text-[#C4BAAE]">{entry.name}</span>
+              <span className="text-[#FF7D55] font-semibold ml-auto">{entry.value}</span>
             </div>
           )
         })}
@@ -399,15 +399,15 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-7xl mx-auto">
+      <div className="h-full bg-background overflow-y-auto">
+        <div className="max-w-7xl mx-auto p-6">
           <Button variant="ghost" onClick={() => router.back()} className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Products
           </Button>
           <div className="text-center py-12">
             <h2 className="text-2xl font-semibold mb-2">Product not found</h2>
-            <p className="text-muted-foreground">The product you're looking for doesn't exist.</p>
+            <p className="text-[#934F3C]/70">The product you're looking for doesn't exist.</p>
           </div>
         </div>
       </div>
@@ -416,8 +416,8 @@ export default function ProductDetailPage() {
 
   if (!product.tracked) {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="h-full bg-background overflow-y-auto">
+        <div className="max-w-4xl mx-auto space-y-6 p-6 pb-8">
           <Button variant="ghost" onClick={() => router.back()}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Products
@@ -425,7 +425,7 @@ export default function ProductDetailPage() {
 
           <div className="space-y-2">
             <h1 className="text-3xl font-semibold">{product.title}</h1>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center gap-4 text-sm text-[#934F3C]/70">
               <span>Product ID: {product.asin}</span>
               <span>·</span>
               <span>Amazon/Shopify</span>
@@ -437,7 +437,7 @@ export default function ProductDetailPage() {
           <Card>
             <CardContent className="p-8">
               <div className="flex flex-col items-center text-center space-y-6">
-                <div className="w-full max-w-md h-64 bg-muted rounded-lg overflow-hidden">
+                <div className="w-full max-w-md h-64 bg-[#F7F6F3] rounded-lg overflow-hidden">
                   <img
                     src={product.image || "/placeholder.svg"}
                     alt={product.title}
@@ -447,7 +447,7 @@ export default function ProductDetailPage() {
 
                 <div className="space-y-2">
                   <h2 className="text-xl font-semibold">{product.title}</h2>
-                  <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-center gap-4 text-sm text-[#934F3C]/70">
                     <span>{product.brand}</span>
                     <span>·</span>
                     <span>{product.category}</span>
@@ -455,7 +455,7 @@ export default function ProductDetailPage() {
                 </div>
 
                 <div className="space-y-3 max-w-md">
-                  <p className="text-muted-foreground">
+                  <p className="text-[#934F3C]/70">
                     This product is not being tracked. Track this product to access detailed analytics, queries,
                     recommendations, and version history.
                   </p>
@@ -483,9 +483,9 @@ export default function ProductDetailPage() {
     .reverse()
 
   const engineDistribution = [
-    { name: "ChatGPT", value: 45, fill: "#3b82f6" }, // Changed 'color' to 'fill' for Recharts compatibility
-    { name: "Perplexity", value: 35, fill: "#a855f7" },
-    { name: "Gemini", value: 20, fill: "#f59e0b" },
+    { name: "ChatGPT", value: 45, fill: "#FF7D55" }, // Primary warm orange
+    { name: "Perplexity", value: 35, fill: "#B86048" }, // Medium orange (darker for contrast)
+    { name: "Gemini", value: 20, fill: "#EECBC2" }, // Light peach (lighter for contrast)
   ]
 
   const scoreOverTimeData = [
@@ -499,16 +499,16 @@ export default function ProductDetailPage() {
   ]
 
   const getScoreBadgeColor = (score: number) => {
-    if (score >= 70) return "bg-green-100 text-green-700"
-    if (score >= 50) return "bg-yellow-100 text-yellow-700"
-    return "bg-red-100 text-red-700"
+    if (score >= 70) return "bg-[#EECBC2] text-[#B86048]" // Light peach background with medium orange text
+    if (score >= 50) return "bg-[#FCBBA9]/30 text-[#934F3C]" // Soft peach background with brown text
+    return "bg-[#DE7053]/20 text-[#934F3C]" // Coral background with brown text
   }
 
   console.log("[v0] Engine distribution data:", engineDistribution)
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-7xl mx-auto space-y-4 pb-4">
+    <div className="h-full bg-background overflow-y-auto">
+      <div className="max-w-7xl mx-auto space-y-4 p-4 pb-8">
         <div className="flex items-center justify-between">
           <Button variant="ghost" onClick={() => router.back()}>
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -516,7 +516,7 @@ export default function ProductDetailPage() {
           </Button>
           {versions.length > 1 && (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">Product Version:</span>
+              <span className="text-sm text-[#934F3C]/70">Product Version:</span>
               <Select
                 value={selectedVersionIndex.toString()}
                 onValueChange={(value) => setSelectedVersionIndex(Number.parseInt(value))}
@@ -542,7 +542,7 @@ export default function ProductDetailPage() {
 
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold">{selectedVersion.snapshot.title}</h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 text-sm text-[#934F3C]/70">
             <span>Product ID: {product.asin}</span>
             <span>·</span>
             <span>Amazon/Shopify</span>
@@ -566,7 +566,7 @@ export default function ProductDetailPage() {
               <CardTitle className="text-base">Product Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 pb-4">
-              <div className="w-full h-40 bg-muted rounded-lg overflow-hidden">
+              <div className="w-full h-40 bg-[#F7F6F3] rounded-lg overflow-hidden">
                 <img
                   src={product.image || "/placeholder.svg"}
                   alt={selectedVersion.snapshot.title}
@@ -576,24 +576,24 @@ export default function ProductDetailPage() {
 
               <div>
                 <h3 className="font-semibold mb-1 text-sm">Description</h3>
-                <p className="text-sm text-muted-foreground">{selectedVersion.snapshot.description}</p>
+                <p className="text-sm text-[#934F3C]/70">{selectedVersion.snapshot.description}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <div className="text-muted-foreground text-xs">Category</div>
+                  <div className="text-[#934F3C]/70 text-xs">Category</div>
                   <div className="font-semibold">{product.category}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Brand</div>
+                  <div className="text-[#934F3C]/70 text-xs">Brand</div>
                   <div className="font-semibold">{product.brand}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">GEO Score</div>
+                  <div className="text-[#934F3C]/70 text-xs">GEO Score</div>
                   <Badge className={getScoreBadgeColor(selectedVersion.geoScore)}>{selectedVersion.geoScore}</Badge>
                 </div>
                 <div>
-                  <div className="text-muted-foreground text-xs">Images</div>
+                  <div className="text-[#934F3C]/70 text-xs">Images</div>
                   <div className="font-semibold">{selectedVersion.snapshot.images}</div>
                 </div>
               </div>
@@ -603,14 +603,14 @@ export default function ProductDetailPage() {
                 <ul className="space-y-1">
                   {selectedVersion.snapshot.bulletPoints.map((point, index) => (
                     <li key={index} className="text-sm flex items-start gap-2">
-                      <span className="text-teal-600 mt-1">•</span>
+                      <span className="text-[#FF7D55] mt-1">•</span>
                       <span>{point}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="pt-3 border-t text-xs text-muted-foreground">
+              <div className="pt-3 border-t border-[#E3DED8] text-xs text-[#934F3C]/70">
                 <p>
                   In future, this card would be available at amazon/brand/semaine/shopify/productid for public, so for
                   now extract this with the semantic data
@@ -619,22 +619,21 @@ export default function ProductDetailPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-3">
+          <Card className="gap-0">
+            <CardHeader className="pb-2">
               <CardTitle className="text-base">Product Analysis</CardTitle>
             </CardHeader>
-            <CardContent className="pb-4">
-              <div className="space-y-4">
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold">Competitor Analysis</h3>
+            <CardContent className="py-0 h-full">
+              <div className="flex flex-col flex-1 justify-between h-full">
+                <div>
                   <div className="flex gap-2 border-b">
                     <button
                       onClick={() => setCompetitorTab("comparison")}
                       className={cn(
                         "px-4 py-2 text-sm font-medium border-b-2 transition-colors",
                         competitorTab === "comparison"
-                          ? "border-primary text-primary"
-                          : "border-transparent text-muted-foreground hover:text-foreground",
+                          ? "border-[#FF7D55] text-[#FF7D55]"
+                          : "border-transparent text-[#934F3C]/70 hover:text-[#1E1D1B]",
                       )}
                     >
                       Competitor Comparison
@@ -644,8 +643,8 @@ export default function ProductDetailPage() {
                       className={cn(
                         "px-4 py-2 text-sm font-medium border-b-2 transition-colors",
                         competitorTab === "trends"
-                          ? "border-primary text-primary"
-                          : "border-transparent text-muted-foreground hover:text-foreground",
+                          ? "border-[#FF7D55] text-[#FF7D55]"
+                          : "border-transparent text-[#934F3C]/70 hover:text-[#1E1D1B]",
                       )}
                     >
                       Visibility Trends
@@ -665,7 +664,7 @@ export default function ProductDetailPage() {
                         </TableHeader>
                         <TableBody>
                           {competitorData.map((competitor) => (
-                            <TableRow key={competitor.rank} className={competitor.isYou ? "bg-muted/50" : ""}>
+                            <TableRow key={competitor.rank} className={competitor.isYou ? "bg-[#FCBBA9]/20" : ""}>
                               <TableCell className="font-medium">{competitor.rank}</TableCell>
                               <TableCell className="font-medium">
                                 <div className="flex items-center gap-2">
@@ -688,18 +687,18 @@ export default function ProductDetailPage() {
                                   <div className="flex items-center gap-1">
                                     {competitor.visibilityTrend > 0 ? (
                                       <>
-                                        <span className="text-green-600 text-xs">↗</span>
-                                        <span className="text-green-600 text-xs">{competitor.visibilityTrend}</span>
+                                        <span className="text-[#FF7D55] text-xs">↗</span>
+                                        <span className="text-[#FF7D55] text-xs">{competitor.visibilityTrend}</span>
                                       </>
                                     ) : competitor.visibilityTrend < 0 ? (
                                       <>
-                                        <span className="text-red-600 text-xs">↘</span>
-                                        <span className="text-red-600 text-xs">
+                                        <span className="text-[#DE7053] text-xs">↘</span>
+                                        <span className="text-[#DE7053] text-xs">
                                           {Math.abs(competitor.visibilityTrend)}
                                         </span>
                                       </>
                                     ) : (
-                                      <span className="text-muted-foreground text-xs">—</span>
+                                      <span className="text-[#934F3C]/50 text-xs">—</span>
                                     )}
                                   </div>
                                 </div>
@@ -716,18 +715,18 @@ export default function ProductDetailPage() {
                     <div className="space-y-4">
                       <ResponsiveContainer width="100%" height={300}>
                         <LineChart data={visibilityTrendsData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                          <CartesianGrid strokeDasharray="3 3" stroke="#E3DED8" vertical={false} />
                           <XAxis
                             dataKey="date"
                             tick={{ fontSize: 12 }}
-                            axisLine={{ stroke: "#e5e7eb" }}
+                            axisLine={{ stroke: "#E3DED8" }}
                             tickLine={false}
                           />
                           <YAxis
                             domain={[0, 80]}
                             ticks={[0, 15, 30, 45, 60]}
                             tick={{ fontSize: 12 }}
-                            axisLine={{ stroke: "#e5e7eb" }}
+                            axisLine={{ stroke: "#E3DED8" }}
                             tickLine={false}
                             label={{
                               value: "Citations",
@@ -773,24 +772,24 @@ export default function ProductDetailPage() {
                           />
                         </LineChart>
                       </ResponsiveContainer>
-                      <p className="text-sm text-muted-foreground text-center">
+                      <p className="text-sm text-[#934F3C]/70 text-center">
                         Shows the number of times each competitor was cited in AI answers over time
                       </p>
                     </div>
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 text-sm pt-3 border-t">
-                  <div className="p-3 bg-muted rounded-lg">
-                    <div className="text-muted-foreground mb-1 text-xs">Visibility Change</div>
-                    <div className="text-xl font-semibold text-teal-600">
+                <div className="grid grid-cols-2 gap-3 text-sm pt-3 border-t border-[#E3DED8]">
+                  <div className="p-3 bg-[#F7F6F3] rounded-lg">
+                    <div className="text-[#934F3C]/70 mb-1 text-xs">Visibility Change</div>
+                    <div className={`text-xl font-semibold ${selectedVersion.visibilityChange >= 0 ? 'text-[#FF7D55]' : 'text-[#DE7053]'}`}>
                       {selectedVersion.visibilityChange > 0 ? "+" : ""}
                       {selectedVersion.visibilityChange}%
                     </div>
                   </div>
-                  <div className="p-3 bg-muted rounded-lg">
-                    <div className="text-muted-foreground mb-1 text-xs">Queries</div>
-                    <div className="text-xl font-semibold">
+                  <div className="p-3 bg-[#F7F6F3] rounded-lg">
+                    <div className="text-[#934F3C]/70 mb-1 text-xs">Queries</div>
+                    <div className="text-xl font-semibold text-[#1E1D1B]">
                       {Math.round(selectedVersion.geoScore * 10)}/{Math.round(selectedVersion.geoScore * 15)}
                     </div>
                   </div>
@@ -813,21 +812,24 @@ export default function ProductDetailPage() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={70}
+                    label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    innerRadius={40}
                     dataKey="value"
+                    paddingAngle={2}
                   >
                     {engineDistribution.map((entry, index) => {
-                      console.log(`[v0] Rendering cell ${index}:`, entry.name, entry.fill)
-                      return <Cell key={`cell-${index}`} fill={entry.fill} />
+                      return <Cell key={`cell-${index}`} fill={entry.fill} stroke="#FFFFFF" strokeWidth={2} />
                     })}
                   </Pie>
-                  <Tooltip />
                   <Legend
+                    verticalAlign="bottom"
+                    height={36}
                     formatter={(value) => {
                       const entry = engineDistribution.find((e) => e.name === value)
-                      return <span style={{ color: entry?.fill }}>{value}</span>
+                      return <span style={{ color: '#1E1D1B', fontWeight: 500 }}>{value}</span>
                     }}
+                    iconType="circle"
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -841,7 +843,7 @@ export default function ProductDetailPage() {
             <CardContent className="pb-4">
               <ResponsiveContainer width="100%" height={240}>
                 <LineChart data={scoreOverTimeData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E3DED8" />
                   <XAxis
                     dataKey="date"
                     tick={{ fontSize: 12 }}
@@ -853,7 +855,7 @@ export default function ProductDetailPage() {
                     label={{ value: "score", angle: -90, position: "insideLeft", fontSize: 12 }}
                   />
                   <Tooltip />
-                  <Line type="monotone" dataKey="score" stroke="#10b981" strokeWidth={2} dot={{ fill: "#10b981" }} />
+                  <Line type="monotone" dataKey="score" stroke="#FF7D55" strokeWidth={2} dot={{ fill: "#FF7D55" }} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -866,7 +868,7 @@ export default function ProductDetailPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base">Top Queries</CardTitle>
-                  <span className="text-sm text-muted-foreground">Query title - ChatGPT position</span>
+                  <span className="text-sm text-[#934F3C]/70">Query title - ChatGPT position</span>
                 </div>
               </CardHeader>
               <CardContent className="pb-4">
@@ -922,10 +924,10 @@ export default function ProductDetailPage() {
                   </TableHeader>
                   <TableBody>
                     {mockRecommendations.map((rec) => (
-                      <TableRow key={rec.id} className="hover:bg-muted/50 cursor-pointer">
+                      <TableRow key={rec.id} className="hover:bg-[#F7F6F3]/50 cursor-pointer">
                         <TableCell className="font-medium">
                           <div className="flex items-center gap-2">
-                            <div className="w-1 h-8 bg-pink-500 rounded-full flex-shrink-0" />
+                            <div className="w-1 h-8 bg-[#FF7D55] rounded-full flex-shrink-0" />
                             <span className="text-sm">{rec.title}</span>
                           </div>
                         </TableCell>
@@ -934,9 +936,9 @@ export default function ProductDetailPage() {
                             variant="secondary"
                             className={cn(
                               "text-xs",
-                              rec.impact === "High" && "bg-pink-100 text-pink-700",
-                              rec.impact === "Medium" && "bg-blue-100 text-blue-700",
-                              rec.impact === "Low" && "bg-gray-100 text-gray-700",
+                              rec.impact === "High" && "bg-[#FCBBA9]/30 text-[#B86048]",
+                              rec.impact === "Medium" && "bg-[#F0A490]/30 text-[#934F3C]",
+                              rec.impact === "Low" && "bg-[#E3DED8] text-[#934F3C]",
                             )}
                           >
                             {rec.impact}
