@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { VeilLogo } from "./veil-logo"
 import { useLanguage } from "@/hooks/use-language"
-import { LayoutGrid, Lightbulb, HelpCircle, User, CreditCard, Search, Package, ChevronLeft } from "lucide-react"
+import { LayoutGrid, Lightbulb, HelpCircle, User, CreditCard, MessageSquare, Package, ChevronLeft } from "lucide-react"
 import { Input } from "./ui/input"
 import { useState } from "react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
@@ -21,7 +21,7 @@ const navigationItems = [
 ]
 
 const actionItems = [
-  { name: "Prompts", href: "/prompts", icon: Search },
+  { name: "Prompts", href: "/prompts", icon: MessageSquare },
   { name: "Recommendations", href: "/recommendations", icon: Lightbulb },
 ]
 
@@ -259,10 +259,15 @@ export function AppSidebar() {
           variant="ghost"
           size="sm"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className={cn("w-full transition-all", isCollapsed ? "justify-center" : "justify-start")}
+          className={cn(
+            "w-full transition-all hover:bg-sidebar-accent/50",
+            isCollapsed ? "justify-center" : "justify-start"
+          )}
         >
-          <ChevronLeft className={cn("h-4 w-4 transition-transform", isCollapsed ? "rotate-180" : "")} />
-          {!isCollapsed && <span className="ml-2">Collapse</span>}
+          <ChevronLeft
+            className={cn("h-4 w-4 transition-transform duration-300", isCollapsed ? "rotate-180" : "")}
+          />
+          {!isCollapsed && <span className="ml-2 text-sm">Collapse</span>}
         </Button>
       </div>
     </aside>
