@@ -1,26 +1,10 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import {
-  Search,
-  Filter,
-  Plus,
-  TrendingUp,
-  TrendingDown,
-  MoreVertical,
-  BarChart3,
-  Lightbulb,
-  MessageSquare,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
+import { ProductsHeader } from "./components/products-header"
+import { ProductsTable } from "./components/products-table"
+import { BulkActionsBar } from "./components/bulk-actions-bar"
 
 interface ProductVersion {
   date: string
@@ -312,20 +296,16 @@ export default function ProductsPage() {
     )
   }
 
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedProducts(filteredProducts.map((p) => p.id))
+    } else {
+      setSelectedProducts([])
+    }
+  }
+
   const handleViewDetails = (product: Product) => {
     router.push(`/products/${product.id}`)
-  }
-
-  const getScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-600"
-    if (score >= 50) return "text-yellow-600"
-    return "text-red-600"
-  }
-
-  const getScoreBadgeColor = (score: number) => {
-    if (score >= 70) return "bg-green-100 text-green-700"
-    if (score >= 50) return "bg-yellow-100 text-yellow-700"
-    return "bg-red-100 text-red-700"
   }
 
   const handleTrackProducts = () => {
@@ -347,258 +327,147 @@ export default function ProductsPage() {
     router.push(`/prompts?productIds=${productIds}`)
   }
 
-  return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="p-6 max-w-[1800px] mx-auto">
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-semibold">
-              {isTrackedView ? "Tracked Products" : "Product Optimization Hub"}
-            </h1>
-            <Button className="gap-2">
-              <Plus className="w-4 h-4" />
-              Add Product
-            </Button>
-          </div>
+  const getScoreColor = (score: number) => {
+    if (score >= 70) return "text-[#5D9B89]"
+    if (score >= 50) return "text-[#D4A574]"
+    return "text-[#DE7053]"
+  }
 
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name, ASIN, or SKU..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
+  // Get the most recent scan date from tracked products
+  const lastScanDate = useMemo(() => {
+    const trackedProducts = products.filter((p) => p.tracked)
+    if (trackedProducts.length === 0) return "N/A"
+    const sortedByDate = [...trackedProducts].sort(
+      (a, b) => new Date(b.lastRun).getTime() - new Date(a.lastRun).getTime()
+    )
+    return sortedByDate[0]?.lastRun || "N/A"
+  }, [products])
+
+  // Calculate additional metrics
+  const totalRecommendations = useMemo(() => {
+    return products.filter((p) => p.tracked).reduce((sum, p) => sum + p.recommendationsCount, 0)
+  }, [products])
+
+  const improvingProducts = useMemo(() => {
+    return products.filter((p) => p.tracked && p.visibilityChange > 0).length
+  }, [products])
+
+  const decliningProducts = useMemo(() => {
+    return products.filter((p) => p.tracked && p.visibilityChange < 0).length
+  }, [products])
+
+  const uniqueEngines = useMemo(() => {
+    const engines = new Set<string>()
+    products.forEach((p) => {
+      if (p.tracked) {
+        p.engines.forEach((e) => engines.add(e))
+      }
+    })
+    return engines.size
+  }, [products])
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden bg-white">
+      {/* Header */}
+      <ProductsHeader
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        filterStatus={filterStatus}
+        setFilterStatus={setFilterStatus}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        isTrackedView={isTrackedView}
+        trackedCount={trackedCount}
+        totalCount={products.length}
+      />
+
+      {/* Main content */}
+      <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+        {/* Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+          {/* Bulk Actions Bar */}
+          {selectedProducts.length > 0 && (
+            <div className="flex-shrink-0 px-6 pt-6">
+              <BulkActionsBar
+                selectedCount={selectedProducts.length}
+                onTrackProducts={handleTrackProducts}
+                onRunScan={handleRunScan}
+                onAssignPromptSet={handleAssignPromptSet}
+                onClear={() => setSelectedProducts([])}
               />
             </div>
+          )}
 
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-[180px]">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="z-50">
-                <SelectItem value="all">All Products</SelectItem>
-                <SelectItem value="tracked">Tracked Only</SelectItem>
-                <SelectItem value="untracked">Untracked Only</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Sort by..." />
-              </SelectTrigger>
-              <SelectContent className="z-50">
-                <SelectItem value="visibility">Highest Visibility</SelectItem>
-                <SelectItem value="improving">Fastest Improving</SelectItem>
-                <SelectItem value="recent">Most Recently Scanned</SelectItem>
-                <SelectItem value="recommendations">Most Recommendations</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Products Table */}
+          <div className="flex-1 flex flex-col min-h-0">
+            <ProductsTable
+              products={filteredProducts}
+              selectedProducts={selectedProducts}
+              onSelectProduct={handleSelectProduct}
+              onSelectAll={handleSelectAll}
+              onViewDetails={handleViewDetails}
+            />
           </div>
         </div>
-
-        {selectedProducts.length > 0 && (
-          <Card className="p-4 mb-6 bg-teal-50 border-teal-200">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">
-                {selectedProducts.length} product{selectedProducts.length > 1 ? "s" : ""} selected
-              </span>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={handleTrackProducts}>
-                  Track Products
-                </Button>
-                <Button variant="outline" size="sm" onClick={handleRunScan}>
-                  Run Scan
-                </Button>
-                <Button variant="outline" size="sm" onClick={handleAssignPromptSet}>
-                  Assign Prompt Set
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => setSelectedProducts([])}>
-                  Clear
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-muted/50 border-b">
-                <tr>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground w-12">
-                    <Checkbox
-                      checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedProducts(filteredProducts.map((p) => p.id))
-                        } else {
-                          setSelectedProducts([])
-                        }
-                      }}
-                    />
-                  </th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Product</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">ASIN</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">GEO Score</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Visibility</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Engines</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground">Actions</th>
-                  <th className="text-left p-4 text-sm font-medium text-muted-foreground w-12"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="border-b hover:bg-muted/30 transition-colors cursor-pointer group"
-                    onClick={() => handleViewDetails(product)}
-                  >
-                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
-                      <Checkbox
-                        checked={selectedProducts.includes(product.id)}
-                        onCheckedChange={() => handleSelectProduct(product.id)}
-                      />
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-muted rounded overflow-hidden flex-shrink-0">
-                          <img
-                            src={product.image || "/placeholder.svg"}
-                            alt={product.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
-                            {product.title}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span className="text-sm text-muted-foreground">{product.asin}</span>
-                    </td>
-                    <td className="p-4">
-                      <Badge variant="secondary" className={getScoreBadgeColor(product.geoScore)}>
-                        {product.geoScore}
-                      </Badge>
-                    </td>
-                    <td className="p-4">
-                      {product.visibilityChange !== 0 && (
-                        <div
-                          className={`flex items-center gap-1.5 text-sm font-medium ${product.visibilityChange > 0 ? "text-green-600" : "text-red-600"}`}
-                        >
-                          {product.visibilityChange > 0 ? (
-                            <TrendingUp className="w-4 h-4" />
-                          ) : (
-                            <TrendingDown className="w-4 h-4" />
-                          )}
-                          {Math.abs(product.visibilityChange)}%
-                        </div>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      {product.engines.length > 0 ? (
-                        <div className="flex items-center gap-1 flex-wrap max-w-[200px]">
-                          {product.engines.slice(0, 3).map((engine) => (
-                            <Badge key={engine} variant="outline" className="text-xs px-2 py-0.5">
-                              {engine}
-                            </Badge>
-                          ))}
-                          {product.engines.length > 3 && (
-                            <Badge variant="outline" className="text-xs px-2 py-0.5">
-                              +{product.engines.length - 3}
-                            </Badge>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      {product.status === "tracked" && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
-                          Tracked
-                        </Badge>
-                      )}
-                      {product.status === "untracked" && (
-                        <Badge variant="secondary" className="bg-gray-100 text-gray-800 text-xs">
-                          Untracked
-                        </Badge>
-                      )}
-                      {product.status === "pending" && (
-                        <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 text-xs">
-                          Analyzing...
-                        </Badge>
-                      )}
-                    </td>
-                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center gap-1">
-                        <Link href={`/visibility?productId=${product.id}`}>
-                          <Button variant="ghost" size="sm" className="h-8 px-2 gap-1">
-                            <BarChart3 className="w-3.5 h-3.5" />
-                          </Button>
-                        </Link>
-                        <Link href={`/recommendations?productId=${product.id}`}>
-                          <Button variant="ghost" size="sm" className="h-8 px-2 gap-1 relative">
-                            <Lightbulb className="w-3.5 h-3.5" />
-                            {product.recommendationsCount > 0 && (
-                              <Badge variant="secondary" className="absolute -top-1 -right-1 h-4 px-1 text-[10px]">
-                                {product.recommendationsCount}
-                              </Badge>
-                            )}
-                          </Button>
-                        </Link>
-                        <Link href={`/prompts?productId=${product.id}`}>
-                          <Button variant="ghost" size="sm" className="h-8 px-2 gap-1">
-                            <MessageSquare className="w-3.5 h-3.5" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </td>
-                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <MoreVertical className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleViewDetails(product)}>View Analytics</DropdownMenuItem>
-                          <DropdownMenuItem>View Recommendations</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg">
-        <div className="max-w-[1800px] mx-auto flex items-center justify-between text-sm">
-          <div className="flex items-center gap-6">
-            <span>
-              <strong>{trackedCount}</strong> / {products.length} products tracked
+      {/* Enhanced Footer Stats Bar */}
+      <div className="border-t border-[#E3DED8] bg-gradient-to-r from-[#F7F6F3] to-[#FEFDFB] px-6 py-3 shadow-sm flex-shrink-0">
+        <div className="grid grid-cols-7 divide-x divide-[#E3DED8]">
+          {/* Products Tracked */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <span className="text-xs text-[#934F3C]/60 uppercase tracking-wide font-medium">Tracked</span>
+            <span className="text-sm text-[#1E1D1B]">
+              <strong className="text-[#5B8BB8]">{trackedCount}</strong> / {products.length}
             </span>
-            <span className="text-muted-foreground">·</span>
-            <span>
-              Average GEO Score: <strong className={getScoreColor(avgGeoScore)}>{avgGeoScore}</strong>
+          </div>
+
+          {/* Average GEO Score */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <span className="text-xs text-[#934F3C]/60 uppercase tracking-wide font-medium">Avg Score</span>
+            <span className="text-sm text-[#1E1D1B]">
+              <strong className={getScoreColor(avgGeoScore)}>{avgGeoScore}</strong> / 100
             </span>
-            <span className="text-muted-foreground">·</span>
-            <span>
-              Visibility change:{" "}
-              <strong className={avgVisibilityChange >= 0 ? "text-green-600" : "text-red-600"}>
-                {avgVisibilityChange >= 0 ? "+" : ""}
-                {avgVisibilityChange.toFixed(1)}%
+          </div>
+
+          {/* Visibility Trend */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <span className="text-xs text-[#934F3C]/60 uppercase tracking-wide font-medium">Trend</span>
+            <span className="text-sm text-[#1E1D1B]">
+              <strong className={avgVisibilityChange >= 0 ? 'text-[#5D9B89]' : 'text-[#DE7053]'}>
+                {avgVisibilityChange >= 0 ? "+" : ""}{avgVisibilityChange.toFixed(1)}%
               </strong>{" "}
-              week-over-week
+              WoW
+            </span>
+          </div>
+
+          {/* Last Scan */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <span className="text-xs text-[#934F3C]/60 uppercase tracking-wide font-medium">Last Scan</span>
+            <span className="text-sm font-semibold text-[#FF7D55]">{lastScanDate}</span>
+          </div>
+
+          {/* Recommendations */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <span className="text-xs text-[#934F3C]/60 uppercase tracking-wide font-medium">Actions</span>
+            <span className="text-sm text-[#1E1D1B]">
+              <strong className="text-[#FF7D55]">{totalRecommendations}</strong> pending
+            </span>
+          </div>
+
+          {/* Performance Split */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <span className="text-xs text-[#934F3C]/60 uppercase tracking-wide font-medium">Performance</span>
+            <span className="text-sm text-[#1E1D1B]">
+              <span className="text-[#5D9B89] font-semibold">↑{improvingProducts}</span> <span className="text-[#DE7053] font-semibold">↓{decliningProducts}</span>
+            </span>
+          </div>
+
+          {/* Engines Coverage */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <span className="text-xs text-[#934F3C]/60 uppercase tracking-wide font-medium">Engines</span>
+            <span className="text-sm text-[#1E1D1B]">
+              <strong>{uniqueEngines}</strong> active
             </span>
           </div>
         </div>
