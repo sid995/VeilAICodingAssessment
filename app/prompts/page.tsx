@@ -590,40 +590,46 @@ function PromptsPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
-      <div className="border-b border-border bg-background p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              {currentProduct?.domain && (
-                <img
-                  src={`https://www.google.com/s2/favicons?domain=${currentProduct.domain}&sz=32`}
-                  alt={`${currentProduct.name} logo`}
-                  className="w-6 h-6 flex-shrink-0"
-                />
-              )}
-              <h1 className="text-xl font-semibold text-foreground">
-                {filteredPrompts.length} prompts for "{currentProduct?.name}"
-              </h1>
+    <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-b from-background to-[#F7F6F3]">
+      <div className="flex-shrink-0 border-b border-[#E3DED8]/60 bg-background/30 backdrop-blur-sm shadow-sm">
+        {/* Product Header */}
+        <div className="px-8 pt-6 pb-4 border-b border-[#E3DED8]/40">
+          <div className="flex items-start justify-between gap-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                {currentProduct?.domain && (
+                  <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#FF7D55]/10 to-[#FB7D5C]/10 ring-1 ring-[#FF7D55]/20 shadow-sm">
+                    <img
+                      src={`https://www.google.com/s2/favicons?domain=${currentProduct.domain}&sz=32`}
+                      alt={`${currentProduct.name} logo`}
+                      className="w-7 h-7 flex-shrink-0"
+                    />
+                  </div>
+                )}
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h1 className="text-lg font-bold text-[#1E1D1B]">
+                      {currentProduct?.name}
+                    </h1>
+                  </div>
+                  {currentProduct?.domain && (
+                    <p className="text-xs text-[#934F3C]/60 font-medium">{currentProduct.domain}</p>
+                  )}
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              Configure your prompts to optimize for specific locations, personas, and LLMs
-            </p>
-            <p className="text-sm text-muted-foreground">Last queried 28 Jun, 25</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">169 / 200 Prompts Added</span>
+
             <Dialog open={isAddPromptOpen} onOpenChange={setIsAddPromptOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="gap-2">
+                <Button className="cursor-pointer gap-2 bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] hover:from-[#DE7053] hover:to-[#B86048] text-white shadow-lg shadow-[#FF7D55]/25 transition-all duration-200 hover:shadow-xl hover:shadow-[#FF7D55]/30">
                   <Plus className="w-4 h-4" />
                   Add Prompt
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto border-[#E3DED8]/70 shadow-2xl">
                 <DialogHeader>
-                  <DialogTitle>Add Prompt</DialogTitle>
-                  <DialogDescription>
+                  <DialogTitle className="text-2xl font-bold text-[#1E1D1B]">Add Prompt</DialogTitle>
+                  <DialogDescription className="text-[#934F3C]/80">
                     Configure targeting for your prompt across locations, personas, and engines.
                   </DialogDescription>
                 </DialogHeader>
@@ -735,10 +741,10 @@ function PromptsPage() {
                 </div>
 
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddPromptOpen(false)}>
+                  <Button variant="outline" onClick={() => setIsAddPromptOpen(false)} className="border-[#E3DED8] hover:bg-[#F7F6F3]">
                     Cancel
                   </Button>
-                  <Button onClick={handleAddPrompt} disabled={!newPromptText.trim()}>
+                  <Button onClick={handleAddPrompt} disabled={!newPromptText.trim()} className="bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] hover:from-[#DE7053] hover:to-[#B86048] text-white shadow-lg shadow-[#FF7D55]/25 transition-all duration-200 hover:shadow-xl hover:shadow-[#FF7D55]/30">
                     Add Prompt
                   </Button>
                 </DialogFooter>
@@ -747,174 +753,483 @@ function PromptsPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 mb-4 p-3 bg-muted/30 rounded-lg border border-border">
-          <Input
-            placeholder="Search prompts..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="max-w-xs"
-          />
+        {/* Metrics Bar */}
+        <div className="px-8 py-4 bg-[#F7F6F3]/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-8">
+              {/* Total Prompts */}
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold text-[#FF7D55]">{filteredPrompts.length}</span>
+                  <span className="text-xs text-[#934F3C]/70 font-medium uppercase tracking-wide">Active Prompts</span>
+                </div>
+              </div>
 
-          <Select value={filterProduct} onValueChange={setFilterProduct}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Filter by product" />
-            </SelectTrigger>
-            <SelectContent>
-              {trackedProducts.map((product) => (
-                <SelectItem key={product.id} value={product.id}>
-                  {product.name === "All Products" ? "All Products" : product.name.substring(0, 30) + "..."}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              {/* Divider */}
+              <div className="w-px h-10 bg-[#E3DED8]" />
 
-          <Select value={filterLLM} onValueChange={setFilterLLM}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="All LLMs" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All LLMs</SelectItem>
-              <SelectItem value="ChatGPT">ChatGPT</SelectItem>
-              <SelectItem value="Perplexity">Perplexity</SelectItem>
-              <SelectItem value="Gemini">Gemini</SelectItem>
-              <SelectItem value="Google">Google</SelectItem>
-              <SelectItem value="Reddit">Reddit</SelectItem>
-            </SelectContent>
-          </Select>
+              {/* Capacity */}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-[#1E1D1B]">169 / 200</span>
+                  <span className="text-xs text-[#934F3C]/70">Prompts Used</span>
+                </div>
+                <div className="w-32 h-1.5 bg-[#E3DED8] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] rounded-full transition-all duration-300"
+                    style={{ width: `${(169 / 200) * 100}%` }}
+                  />
+                </div>
+              </div>
 
-          <Select value={filterLanguage} onValueChange={setFilterLanguage}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="All Languages" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Languages</SelectItem>
-              <SelectItem value="English">English</SelectItem>
-              <SelectItem value="Spanish">Spanish</SelectItem>
-              <SelectItem value="French">French</SelectItem>
-              <SelectItem value="German">German</SelectItem>
-              <SelectItem value="Japanese">Japanese</SelectItem>
-              <SelectItem value="Italian">Italian</SelectItem>
-              <SelectItem value="Dutch">Dutch</SelectItem>
-              <SelectItem value="Swedish">Swedish</SelectItem>
-              <SelectItem value="Portuguese">Portuguese</SelectItem>
-            </SelectContent>
-          </Select>
+              {/* Divider */}
+              <div className="w-px h-10 bg-[#E3DED8]" />
 
-          <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="All Types" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="geo">GEO</SelectItem>
-              <SelectItem value="seo">SEO</SelectItem>
-            </SelectContent>
-          </Select>
+              {/* Last Updated */}
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-[#FCBBA9]/20">
+                  <svg className="w-4 h-4 text-[#FF7D55]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-[#934F3C]/60 font-medium">Last Queried</span>
+                  <span className="text-sm font-semibold text-[#1E1D1B]">28 Jun, 25</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Info Text */}
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FCBBA9]/10 border border-[#FF7D55]/10">
+              <svg className="w-4 h-4 text-[#FF7D55]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-xs text-[#934F3C]/70">
+                Target specific locations, personas & LLMs
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
-          <Table>
-            <TableHeader className="sticky top-0 bg-background z-10">
-              <TableRow>
-                <TableHead className="w-[45%]">Prompts</TableHead>
-                <TableHead className="w-[8%]">Source</TableHead>
-                <TableHead className="w-[15%]">Persona</TableHead>
-                <TableHead className="w-[15%]">Location</TableHead>
-                <TableHead className="w-[12%] text-right">Average Position</TableHead>
-                <TableHead className="w-[5%] text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPrompts.map((prompt) => (
-                <TableRow
-                  key={prompt.id}
-                  className="hover:bg-muted/50 cursor-pointer"
-                  onClick={() => handleQueryClick(prompt)}
+        {/* Filters Section */}
+        <div className="px-8 py-5 bg-gradient-to-br from-[#F7F6F3]/50 to-[#FCBBA9]/5 border-b border-[#E3DED8]/40">
+          <div className="flex items-center justify-between gap-4">
+            {/* Search Input */}
+            <div className="relative flex-1 max-w-md">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg className="w-4 h-4 text-[#934F3C]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <Input
+                placeholder="Search prompts by keyword..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-white border-[#E3DED8] focus:border-[#FF7D55]/50 focus:ring-[#FF7D55]/20 transition-all h-10"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#934F3C]/50 hover:text-[#FF7D55] transition-colors"
                 >
-                  <TableCell className="font-medium text-sm">{prompt.text}</TableCell>
-                  <TableCell>
-                    <SourceIcon source={prompt.source} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {prompt.personas.map((persona, idx) => (
-                        <Badge
-                          key={idx}
-                          variant="secondary"
-                          className="text-xs font-medium bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"
-                        >
-                          {persona}
-                        </Badge>
-                      ))}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* Filter Dropdowns */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-[#934F3C]/70 uppercase tracking-wider mr-2">Filters:</span>
+
+              <Select value={filterProduct} onValueChange={setFilterProduct}>
+                <SelectTrigger className="h-10 min-w-[180px] bg-white border-[#E3DED8] hover:border-[#FF7D55]/30 focus:border-[#FF7D55]/50 focus:ring-[#FF7D55]/20 transition-all">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 text-[#FF7D55]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <SelectValue placeholder="All Products" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  {trackedProducts.map((product) => (
+                    <SelectItem key={product.id} value={product.id}>
+                      {product.name === "All Products" ? "All Products" : product.name.substring(0, 35) + "..."}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filterLLM} onValueChange={setFilterLLM}>
+                <SelectTrigger className="h-10 w-[140px] bg-white border-[#E3DED8] hover:border-[#FF7D55]/30 focus:border-[#FF7D55]/50 focus:ring-[#FF7D55]/20 transition-all">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 text-[#FF7D55]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <SelectValue placeholder="All LLMs" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All LLMs</SelectItem>
+                  <SelectItem value="ChatGPT">ChatGPT</SelectItem>
+                  <SelectItem value="Perplexity">Perplexity</SelectItem>
+                  <SelectItem value="Gemini">Gemini</SelectItem>
+                  <SelectItem value="Google">Google</SelectItem>
+                  <SelectItem value="Reddit">Reddit</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filterLanguage} onValueChange={setFilterLanguage}>
+                <SelectTrigger className="h-10 w-[140px] bg-white border-[#E3DED8] hover:border-[#FF7D55]/30 focus:border-[#FF7D55]/50 focus:ring-[#FF7D55]/20 transition-all">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 text-[#FF7D55]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                    <SelectValue placeholder="All Languages" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Languages</SelectItem>
+                  <SelectItem value="English">English</SelectItem>
+                  <SelectItem value="Spanish">Spanish</SelectItem>
+                  <SelectItem value="French">French</SelectItem>
+                  <SelectItem value="German">German</SelectItem>
+                  <SelectItem value="Japanese">Japanese</SelectItem>
+                  <SelectItem value="Italian">Italian</SelectItem>
+                  <SelectItem value="Dutch">Dutch</SelectItem>
+                  <SelectItem value="Swedish">Swedish</SelectItem>
+                  <SelectItem value="Portuguese">Portuguese</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filterType} onValueChange={setFilterType}>
+                <SelectTrigger className="h-10 w-[130px] bg-white border-[#E3DED8] hover:border-[#FF7D55]/30 focus:border-[#FF7D55]/50 focus:ring-[#FF7D55]/20 transition-all">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 text-[#FF7D55]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <SelectValue placeholder="All Types" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="geo">GEO</SelectItem>
+                  <SelectItem value="seo">SEO</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Clear Filters Button */}
+              {(searchQuery || filterProduct !== "all" || filterLLM !== "all" || filterLanguage !== "all" || filterType !== "all") && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery("")
+                    setFilterProduct("all")
+                    setFilterLLM("all")
+                    setFilterLanguage("all")
+                    setFilterType("all")
+                  }}
+                  className="h-10 px-3 border-[#E3DED8] hover:bg-[#FCBBA9]/10 hover:border-[#FF7D55]/30 text-[#934F3C] hover:text-[#FF7D55] transition-all"
+                >
+                  <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Clear
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Active Filters Display */}
+          {(filterProduct !== "all" || filterLLM !== "all" || filterLanguage !== "all" || filterType !== "all") && (
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[#E3DED8]/30">
+              <span className="text-xs font-medium text-[#934F3C]/60">Active Filters:</span>
+              <div className="flex flex-wrap gap-2">
+                {filterProduct !== "all" && (
+                  <Badge className="bg-gradient-to-r from-[#FCBBA9]/60 to-[#F0A490]/40 text-[#934F3C] border-none px-2.5 py-1 gap-1.5">
+                    Product: {trackedProducts.find(p => p.id === filterProduct)?.name.substring(0, 20)}...
+                    <button onClick={() => setFilterProduct("all")} className="hover:text-[#FF7D55] transition-colors">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </Badge>
+                )}
+                {filterLLM !== "all" && (
+                  <Badge className="bg-gradient-to-r from-[#FCBBA9]/60 to-[#F0A490]/40 text-[#934F3C] border-none px-2.5 py-1 gap-1.5">
+                    LLM: {filterLLM}
+                    <button onClick={() => setFilterLLM("all")} className="hover:text-[#FF7D55] transition-colors">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </Badge>
+                )}
+                {filterLanguage !== "all" && (
+                  <Badge className="bg-gradient-to-r from-[#FCBBA9]/60 to-[#F0A490]/40 text-[#934F3C] border-none px-2.5 py-1 gap-1.5">
+                    Language: {filterLanguage}
+                    <button onClick={() => setFilterLanguage("all")} className="hover:text-[#FF7D55] transition-colors">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </Badge>
+                )}
+                {filterType !== "all" && (
+                  <Badge className="bg-gradient-to-r from-[#FCBBA9]/60 to-[#F0A490]/40 text-[#934F3C] border-none px-2.5 py-1 gap-1.5">
+                    Type: {filterType.toUpperCase()}
+                    <button onClick={() => setFilterType("all")} className="hover:text-[#FF7D55] transition-colors">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </Badge>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Modern Card-Style Table */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+        <div className="px-8 pt-4 pb-6">
+          {filteredPrompts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 px-4">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-[#F7F6F3] to-[#FCBBA9]/20 mb-6">
+                <svg className="w-16 h-16 text-[#FF7D55]/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-[#1E1D1B] mb-2">No prompts found</h3>
+              <p className="text-sm text-[#934F3C]/70 text-center max-w-md mb-6">
+                Try adjusting your filters or search query to find matching prompts for this product.
+              </p>
+              <Button
+                onClick={() => {
+                  setSearchQuery("")
+                  setFilterProduct("all")
+                  setFilterLLM("all")
+                  setFilterLanguage("all")
+                  setFilterType("all")
+                }}
+                className="bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] hover:from-[#DE7053] hover:to-[#B86048] text-white"
+              >
+                Clear All Filters
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredPrompts.map((prompt, index) => (
+                <div
+                  key={prompt.id}
+                  className="group relative bg-white rounded-xl border border-[#E3DED8]/60 hover:border-[#FF7D55]/30 hover:shadow-lg hover:shadow-[#FF7D55]/5 transition-all duration-300 overflow-hidden"
+                >
+                  {/* Rank Badge - Top Left Corner */}
+                  <div className="absolute top-3 left-3 z-10">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-br from-[#FF7D55] to-[#FB7D5C] shadow-lg shadow-[#FF7D55]/20">
+                      <svg className="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      <span className="text-sm font-bold text-white">{prompt.position}</span>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      <Badge variant="outline" className="text-xs font-medium">
-                        {prompt.location.city}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs font-medium">
-                        {prompt.location.country}
-                      </Badge>
+                  </div>
+
+                  {/* Type Badge - Top Right Corner */}
+                  <div className="absolute top-3 right-3 z-10">
+                    <Badge
+                      className={`text-xs font-semibold px-3 py-1 ${prompt.type === "geo"
+                        ? "bg-[#70A2CB]/10 text-[#70A2CB] border border-[#70A2CB]/30"
+                        : "bg-[#E3DED8]/60 text-[#934F3C] border border-[#E3DED8]"
+                        }`}
+                    >
+                      {prompt.type === "geo" ? "GEO" : "SEO"}
+                    </Badge>
+                  </div>
+
+                  <div className="p-6 pt-14">
+                    {/* Prompt Text */}
+                    <div className="mb-4">
+                      <h3 className="text-base font-semibold text-[#1E1D1B] leading-relaxed mb-2 pr-16 group-hover:text-[#FF7D55] transition-colors">
+                        {prompt.text}
+                      </h3>
+                      {prompt.productSnippet && (
+                        <p className="text-xs text-[#934F3C]/60 italic">
+                          Snippet: {prompt.productSnippet}
+                        </p>
+                      )}
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right font-medium">{prompt.position}</TableCell>
-                  <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+
+                    {/* Metadata Grid */}
+                    <div className="grid grid-cols-4 gap-4 pt-4 border-t border-[#E3DED8]/40">
+                      {/* Source */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5">
+                          <svg className="w-3 h-3 text-[#934F3C]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                          <span className="text-xs font-semibold text-[#934F3C]/70 uppercase tracking-wide">Source</span>
+                        </div>
+                        <div className="inline-flex p-2 rounded-lg bg-[#F7F6F3] border border-[#E3DED8]/50 group-hover:border-[#FF7D55]/20 transition-colors">
+                          <SourceIcon source={prompt.source} />
+                        </div>
+                      </div>
+
+                      {/* Personas */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5">
+                          <svg className="w-3 h-3 text-[#934F3C]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                          <span className="text-xs font-semibold text-[#934F3C]/70 uppercase tracking-wide">Personas</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {prompt.personas.slice(0, 3).map((persona, idx) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gradient-to-br from-[#FCBBA9]/70 to-[#F0A490]/50 text-[#934F3C] border border-[#F0A490]/30"
+                            >
+                              {persona}
+                            </span>
+                          ))}
+                          {prompt.personas.length > 3 && (
+                            <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#E3DED8]/60 text-[#934F3C]">
+                              +{prompt.personas.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Location */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5">
+                          <svg className="w-3 h-3 text-[#934F3C]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span className="text-xs font-semibold text-[#934F3C]/70 uppercase tracking-wide">Location</span>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-semibold text-[#1E1D1B]">{prompt.location.city}</p>
+                          <p className="text-xs text-[#934F3C]/70">{prompt.location.country}</p>
+                          <p className="text-xs text-[#934F3C]/50">{prompt.location.language}</p>
+                        </div>
+                      </div>
+
+                      {/* LLMs */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5">
+                          <svg className="w-3 h-3 text-[#934F3C]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                          </svg>
+                          <span className="text-xs font-semibold text-[#934F3C]/70 uppercase tracking-wide">LLMs</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {prompt.llms.map((llm, idx) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#F7F6F3] text-[#1E1D1B] border border-[#E3DED8]/50"
+                            >
+                              {llm}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons - Bottom Right */}
+                  <div className="absolute bottom-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleQueryClick(prompt)}
+                      className="h-9 px-3 bg-white border-[#E3DED8] hover:border-[#FF7D55]/30 hover:bg-[#FCBBA9]/10 text-[#1E1D1B] hover:text-[#FF7D55] shadow-sm"
+                    >
+                      <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      View Details
+                    </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                      className="h-9 w-9 p-0 text-[#934F3C]/70 hover:text-destructive hover:bg-destructive/10"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
-                  </TableCell>
-                </TableRow>
+                  </div>
+
+                  {/* Hover Indicator - Left Border */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#FF7D55] to-[#FB7D5C] transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top" />
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          )}
         </div>
       </div>
 
       <Dialog open={isQueryDetailOpen} onOpenChange={setIsQueryDetailOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <div className="flex items-start justify-between gap-4">
+        <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto border-[#E3DED8] shadow-xl bg-white">
+          <DialogHeader className="border-b border-[#E3DED8]/40 pb-5">
+            <div className="flex items-start justify-between gap-6">
               <div className="flex-1">
-                <DialogTitle className="text-xl mb-2">{selectedQuery?.text}</DialogTitle>
-                <Badge variant={selectedQuery?.type === "geo" ? "default" : "secondary"} className="text-xs">
-                  {selectedQuery?.type === "geo" ? "GEO Query" : "SEO Query"}
-                </Badge>
+                <DialogTitle className="text-xl mb-3 font-semibold text-[#1E1D1B] leading-relaxed pr-8">
+                  {selectedQuery?.text}
+                </DialogTitle>
+                <div className="flex items-center gap-3">
+                  <Badge
+                    className={`text-xs px-2.5 py-1 ${selectedQuery?.type === "geo"
+                      ? "bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] text-white border-none"
+                      : "bg-[#E3DED8]/50 text-[#934F3C] border border-[#E3DED8]"
+                      }`}
+                  >
+                    {selectedQuery?.type === "geo" ? "GEO Query" : "SEO Query"}
+                  </Badge>
+                  <span className="text-sm text-[#934F3C]/70">
+                    Position: <span className="font-semibold text-[#FF7D55]">#{selectedQuery?.position}</span>
+                  </span>
+                </div>
               </div>
             </div>
           </DialogHeader>
 
-          <div className="space-y-6 py-4">
+          <div className="space-y-6 py-6">
+            {/* Query Settings Section */}
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">Query Settings</h3>
+              <h3 className="text-sm font-semibold text-[#1E1D1B]">Query Configuration</h3>
 
+              {/* Location */}
               <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-sm">
-                  <MapPin className="w-4 h-4" />
-                  Location
+                <Label className="flex items-center gap-2 text-sm text-[#1E1D1B]">
+                  <MapPin className="w-4 h-4 text-[#FF7D55]" />
+                  Location Targeting
                 </Label>
                 <Input
                   defaultValue={`${selectedQuery?.location.country}, ${selectedQuery?.location.city}, ${selectedQuery?.location.language}`}
                   placeholder="e.g., United States, San Francisco, English"
+                  className="border-[#E3DED8] focus:border-[#FF7D55]/50 focus:ring-[#FF7D55]/20"
                 />
-                <p className="text-xs text-muted-foreground">Enter location details (country, city, language)</p>
+                <p className="text-xs text-[#934F3C]/60">Format: Country, City, Language</p>
               </div>
 
+              {/* LLMs Targeted */}
               <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-sm">
-                  <Globe className="w-4 h-4" />
+                <Label className="flex items-center gap-2 text-sm text-[#1E1D1B]">
+                  <Globe className="w-4 h-4 text-[#FF7D55]" />
                   LLMs Targeted
                 </Label>
                 <div className="flex flex-wrap gap-2">
                   {["ChatGPT", "Perplexity", "Gemini"].map((llm) => (
                     <Badge
                       key={llm}
-                      variant={selectedQuery?.llms.includes(llm) ? "default" : "outline"}
-                      className="cursor-pointer"
+                      className={`cursor-pointer px-3 py-1 text-xs transition-all ${selectedQuery?.llms.includes(llm)
+                        ? "bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] text-white border-none"
+                        : "bg-white text-[#934F3C] border-[#E3DED8] hover:border-[#FF7D55]/30"
+                        }`}
                     >
                       {llm}
                     </Badge>
@@ -922,90 +1237,114 @@ function PromptsPage() {
                 </div>
               </div>
 
+              {/* Product Snippet */}
               <div className="space-y-2">
-                <Label className="text-sm">Product Snippet</Label>
-                <Input defaultValue={selectedQuery?.productSnippet} />
+                <Label className="text-sm text-[#1E1D1B]">Product Snippet</Label>
+                <Input
+                  defaultValue={selectedQuery?.productSnippet}
+                  placeholder="Enter product snippet..."
+                  className="border-[#E3DED8] focus:border-[#FF7D55]/50 focus:ring-[#FF7D55]/20"
+                />
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">Answers for this Query</h3>
-              <div className="border border-border rounded-lg divide-y divide-border">
+            {/* Answers Section */}
+            <div className="space-y-4 pt-4 border-t border-[#E3DED8]/40">
+              <h3 className="text-sm font-semibold text-[#1E1D1B]">LLM Responses</h3>
+
+              <div className="space-y-3">
                 {mockAnswers.map((answer, idx) => (
                   <div
                     key={idx}
-                    className="p-4 space-y-2 hover:bg-muted/30 cursor-pointer transition-colors"
+                    className="p-4 rounded-lg border border-[#E3DED8] hover:border-[#FF7D55]/40 hover:shadow-sm cursor-pointer transition-all duration-200"
                     onClick={() => handleAnswerClick(answer)}
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs border-[#E3DED8]">
                           {answer.llm}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">{answer.date}</span>
+                        <span className="text-xs text-[#934F3C]/60">
+                          {answer.date}
+                        </span>
                       </div>
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge variant="secondary" className="text-xs bg-[#FF7D55]/10 text-[#FF7D55] border border-[#FF7D55]/20">
                         Rank #{answer.rank}
                       </Badge>
                     </div>
 
-                    <p className="text-sm text-foreground">{answer.answer}</p>
+                    <p className="text-sm text-[#1E1D1B] leading-relaxed">{answer.answer}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsQueryDetailOpen(false)}>
+          <DialogFooter className="border-t border-[#E3DED8]/40 pt-5 gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setIsQueryDetailOpen(false)}
+              className="border-[#E3DED8] hover:bg-[#F7F6F3] text-[#1E1D1B]"
+            >
               Close
             </Button>
-            <Button>Save Changes</Button>
+            <Button className="bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] hover:from-[#DE7053] hover:to-[#B86048] text-white shadow-md hover:shadow-lg transition-all">
+              Save Changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <Dialog open={isDetailedAnswerOpen} onOpenChange={setIsDetailedAnswerOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto border-[#E3DED8]/70 shadow-2xl">
           <DialogHeader>
             <div className="flex items-start gap-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleBackToResponses}
-                className="gap-2 -ml-2 text-muted-foreground hover:text-foreground"
+                className="gap-2 -ml-2 text-[#934F3C] hover:text-[#1E1D1B] hover:bg-[#F7F6F3] transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Responses
               </Button>
             </div>
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center justify-between pt-3">
               <div className="flex items-center gap-3">
-                <Badge variant="outline" className="text-sm">
+                <Badge variant="outline" className="text-sm border-[#E3DED8] shadow-sm">
                   {selectedAnswer?.llm}
                 </Badge>
-                <span className="text-sm text-muted-foreground">{selectedAnswer?.date}</span>
+                <span className="text-sm text-[#934F3C]/70 flex items-center gap-1.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#FF7D55]/60"></span>
+                  {selectedAnswer?.date}
+                </span>
               </div>
-              <Badge variant="secondary" className="text-sm">
+              <Badge variant="secondary" className="text-sm bg-gradient-to-br from-[#FCBBA9]/60 to-[#F0A490]/40 text-[#934F3C] border border-[#F0A490]/50 shadow-sm">
                 Rank #{selectedAnswer?.rank}
               </Badge>
             </div>
           </DialogHeader>
 
           <div className="space-y-6 py-4">
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-foreground">Full Response</h3>
-              <p className="text-sm text-foreground leading-relaxed">{selectedAnswer?.fullAnswer}</p>
+            <div className="space-y-4 p-5 rounded-xl bg-gradient-to-br from-[#F7F6F3] to-[#FCBBA9]/10 border border-[#E3DED8]/40">
+              <h3 className="text-base font-semibold text-[#1E1D1B] flex items-center gap-2">
+                <span className="w-1 h-5 bg-gradient-to-b from-[#FF7D55] to-[#FB7D5C] rounded-full"></span>
+                Full Response
+              </h3>
+              <p className="text-sm text-[#1E1D1B] leading-relaxed">{selectedAnswer?.fullAnswer}</p>
             </div>
 
-            <div className="pt-4 border-t border-border">
-              <h3 className="text-sm font-semibold text-foreground mb-3">Targeted Personas</h3>
+            <div className="pt-4 border-t border-[#E3DED8]/40">
+              <h3 className="text-sm font-semibold text-[#1E1D1B] mb-3 flex items-center gap-2">
+                <span className="w-1 h-4 bg-gradient-to-b from-[#FF7D55] to-[#FB7D5C] rounded-full"></span>
+                Targeted Personas
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {selectedAnswer?.personas.map((persona, idx) => (
                   <Badge
                     key={idx}
                     variant="secondary"
-                    className="text-sm bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"
+                    className="text-sm bg-gradient-to-br from-[#FCBBA9]/60 to-[#F0A490]/40 text-[#934F3C] border border-[#F0A490]/50 shadow-sm"
                   >
                     {persona}
                   </Badge>
@@ -1013,32 +1352,35 @@ function PromptsPage() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-border">
-              <h3 className="text-sm font-semibold text-foreground mb-3">Query Details</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Query:</span>
-                  <span className="text-foreground">{selectedQuery?.text}</span>
+            <div className="pt-4 border-t border-[#E3DED8]/40">
+              <h3 className="text-sm font-semibold text-[#1E1D1B] mb-4 flex items-center gap-2">
+                <span className="w-1 h-4 bg-gradient-to-b from-[#FF7D55] to-[#FB7D5C] rounded-full"></span>
+                Query Details
+              </h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-[#F7F6F3]">
+                  <span className="text-[#934F3C] font-medium min-w-[80px]">Query:</span>
+                  <span className="text-[#1E1D1B] flex-1">{selectedQuery?.text}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Location:</span>
-                  <span className="text-foreground">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F7F6F3]">
+                  <span className="text-[#934F3C] font-medium min-w-[80px]">Location:</span>
+                  <span className="text-[#1E1D1B]">
                     {selectedQuery?.location.city}, {selectedQuery?.location.country}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Language:</span>
-                  <span className="text-foreground">{selectedQuery?.location.language}</span>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F7F6F3]">
+                  <span className="text-[#934F3C] font-medium min-w-[80px]">Language:</span>
+                  <span className="text-[#1E1D1B]">{selectedQuery?.location.language}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={handleBackToResponses}>
+            <Button variant="outline" onClick={handleBackToResponses} className="border-[#E3DED8] hover:bg-[#F7F6F3]">
               Back
             </Button>
-            <Button>Copy Response</Button>
+            <Button className="bg-gradient-to-r from-[#FF7D55] to-[#FB7D5C] hover:from-[#DE7053] hover:to-[#B86048] text-white shadow-lg shadow-[#FF7D55]/25 transition-all duration-200 hover:shadow-xl hover:shadow-[#FF7D55]/30">Copy Response</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1047,3 +1389,4 @@ function PromptsPage() {
 }
 
 export default PromptsPage
+
