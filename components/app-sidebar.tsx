@@ -121,9 +121,9 @@ export function AppSidebar() {
               const Icon = item.icon
               const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
               return (
-                <>
+                <div key={item.href}>
                   {isCollapsed ? (
-                    <TooltipProvider key={item.href}>
+                    <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Link
@@ -145,7 +145,6 @@ export function AppSidebar() {
                     </TooltipProvider>
                   ) : (
                     <Link
-                      key={item.href}
                       href={item.href}
                       className={cn(
                         "flex items-center gap-3 px-2 py-2 rounded-md text-sm transition-colors",
@@ -158,7 +157,7 @@ export function AppSidebar() {
                       {t(item.name.toLowerCase())}
                     </Link>
                   )}
-                </>
+                </div>
               )
             })}
           </div>
