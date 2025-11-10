@@ -1,0 +1,360 @@
+import type { Product, Competitor, Query, Recommendation, EngineDistribution, ScoreData, VisibilityTrendData } from "./types"
+
+export const mockProducts: Product[] = [
+  {
+    id: "1",
+    asin: "B0FD16J243",
+    title: "Gaiam Balance Ball Chair - No-Roll Ergonomic Office Chair & Yoga Ball Chair for Home Office Desk",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-10-17%20at%204.01.35%E2%80%AFPM-2ytcIpX7QFH9PfkXywCyvmmtwajvFQ.png",
+    geoScore: 62,
+    lastRun: "10/17/2025",
+    status: "tracked",
+    tracked: true,
+    visibilityChange: 3.2,
+    visibilityTrend: [45, 48, 52, 55, 58, 60, 62],
+    engines: ["ChatGPT", "Perplexity", "Gemini"],
+    category: "Office Furniture",
+    brand: "Gaiam",
+    recommendationsCount: 8,
+    versions: [
+      {
+        date: "10/17/2025",
+        geoScore: 62,
+        visibilityChange: 3.2,
+        snapshot: {
+          title: "Gaiam Balance Ball Chair - No-Roll Ergonomic Office Chair & Yoga Ball Chair for Home Office Desk",
+          description: "Current version with updated ergonomic features",
+          bulletPoints: ["Ergonomic design", "No-roll feature", "Adjustable height"],
+          images: 7,
+        },
+      },
+      {
+        date: "10/10/2025",
+        geoScore: 60,
+        visibilityChange: 2.1,
+        snapshot: {
+          title: "Gaiam Balance Ball Chair - Office Chair",
+          description: "Previous version",
+          bulletPoints: ["Ergonomic design", "Adjustable height"],
+          images: 5,
+        },
+      },
+      {
+        date: "10/03/2025",
+        geoScore: 58,
+        visibilityChange: 1.5,
+        snapshot: {
+          title: "Gaiam Balance Ball Chair",
+          description: "Initial version",
+          bulletPoints: ["Ergonomic design"],
+          images: 3,
+        },
+      },
+    ],
+  },
+  {
+    id: "2",
+    asin: "B006FFR37W",
+    title: "Gaiam Classic Balance Ball Chair – Ergonomic Stability Chair for Desk & Office | Yoga Ball S...",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-10-17%20at%204.01.35%E2%80%AFPM-2ytcIpX7QFH9PfkXywCyvmmtwajvFQ.png",
+    geoScore: 66,
+    lastRun: "10/17/2025",
+    status: "tracked",
+    tracked: true,
+    visibilityChange: -1.5,
+    visibilityTrend: [70, 68, 67, 66, 66, 66, 66],
+    engines: ["ChatGPT", "Perplexity"],
+    category: "Office Furniture",
+    brand: "Gaiam",
+    recommendationsCount: 5,
+    versions: [
+      {
+        date: "10/17/2025",
+        geoScore: 66,
+        visibilityChange: -1.5,
+        snapshot: {
+          title: "Gaiam Classic Balance Ball Chair – Ergonomic Stability Chair for Desk & Office | Yoga Ball S...",
+          description: "Current version",
+          bulletPoints: ["Classic design", "Stability features"],
+          images: 6,
+        },
+      },
+    ],
+  },
+  {
+    id: "3",
+    asin: "B07G3SZXF2",
+    title: "Gaiam Balance Disc Wobble Cushion Stability Core Trainer for Home or Office Desk Chair &...",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-10-17%20at%204.01.35%E2%80%AFPM-2ytcIpX7QFH9PfkXywCyvmmtwajvFQ.png",
+    geoScore: 64,
+    lastRun: "10/17/2025",
+    status: "tracked",
+    tracked: true,
+    visibilityChange: 0.8,
+    visibilityTrend: [63, 63, 64, 64, 64, 64, 64],
+    engines: ["ChatGPT", "Gemini", "Copilot"],
+    category: "Fitness",
+    brand: "Gaiam",
+    recommendationsCount: 12,
+    versions: [
+      {
+        date: "10/17/2025",
+        geoScore: 64,
+        visibilityChange: 0.8,
+        snapshot: {
+          title: "Gaiam Balance Disc Wobble Cushion Stability Core Trainer for Home or Office Desk Chair &...",
+          description: "Current version",
+          bulletPoints: ["Core training", "Wobble cushion"],
+          images: 5,
+        },
+      },
+    ],
+  },
+  {
+    id: "4",
+    asin: "B0FD16J244",
+    title: "Gaiam Classic Balance Ball Chair - Purple",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-10-17%20at%204.01.35%E2%80%AFPM-2ytcIpX7QFH9PfkXywCyvmmtwajvFQ.png",
+    geoScore: 68,
+    lastRun: "10/17/2025",
+    status: "untracked",
+    tracked: false,
+    visibilityChange: 0,
+    visibilityTrend: [68, 68, 68, 68, 68, 68, 68],
+    engines: [],
+    category: "Office Furniture",
+    brand: "Gaiam",
+    recommendationsCount: 0,
+    versions: [],
+  },
+  {
+    id: "5",
+    asin: "B0FD16J245",
+    title: "Gaiam Balance Ball Chair - Black",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-10-17%20at%204.01.35%E2%80%AFPM-2ytcIpX7QFH9PfkXywCyvmmtwajvFQ.png",
+    geoScore: 61,
+    lastRun: "10/17/2025",
+    status: "pending",
+    tracked: true,
+    visibilityChange: 0,
+    visibilityTrend: [61, 61, 61, 61, 61, 61, 61],
+    engines: [],
+    category: "Office Furniture",
+    brand: "Gaiam",
+    recommendationsCount: 0,
+    versions: [],
+  },
+  {
+    id: "6",
+    asin: "B0FD16J246",
+    title: "Gaiam Balance Ball Chair - Gray",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-10-17%20at%204.01.35%E2%80%AFPM-2ytcIpX7QFH9PfkXywCyvmmtwajvFQ.png",
+    geoScore: 59,
+    lastRun: "10/17/2025",
+    status: "untracked",
+    tracked: false,
+    visibilityChange: 0,
+    visibilityTrend: [59, 59, 59, 59, 59, 59, 59],
+    engines: [],
+    category: "Office Furniture",
+    brand: "Gaiam",
+    recommendationsCount: 0,
+    versions: [],
+  },
+  {
+    id: "7",
+    asin: "B0FD16J247",
+    title: "Gaiam Balance Ball Chair - Blue",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-10-17%20at%204.01.35%E2%80%AFPM-2ytcIpX7QFH9PfkXywCyvmmtwajvFQ.png",
+    geoScore: 63,
+    lastRun: "10/17/2025",
+    status: "tracked",
+    tracked: true,
+    visibilityChange: 2.1,
+    visibilityTrend: [58, 59, 60, 61, 62, 62, 63],
+    engines: ["ChatGPT", "Perplexity", "Gemini", "Copilot"],
+    category: "Office Furniture",
+    brand: "Gaiam",
+    recommendationsCount: 6,
+    versions: [
+      {
+        date: "10/17/2025",
+        geoScore: 63,
+        visibilityChange: 2.1,
+        snapshot: {
+          title: "Gaiam Balance Ball Chair - Blue",
+          description: "Current version",
+          bulletPoints: ["Blue color variant"],
+          images: 6,
+        },
+      },
+    ],
+  },
+]
+
+export const competitorData: Competitor[] = [
+  {
+    rank: 1,
+    brand: "Vivora",
+    domain: "vivora.com",
+    visibility: 72,
+    visibilityTrend: 5,
+    sentiment: 88,
+    sentimentTrend: 3,
+    avgPosition: 2.1,
+  },
+  {
+    rank: 2,
+    brand: "Trideer",
+    domain: "trideer.com",
+    visibility: 68,
+    visibilityTrend: -2,
+    sentiment: 85,
+    sentimentTrend: 1,
+    avgPosition: 2.4,
+  },
+  {
+    rank: 3,
+    brand: "Your Brand",
+    domain: "gaiam.com",
+    isYou: true,
+    visibility: 62,
+    visibilityTrend: 3,
+    sentiment: 89,
+    sentimentTrend: 5,
+    avgPosition: 3.2,
+  },
+  {
+    rank: 4,
+    brand: "URBNFit",
+    domain: "urbnfit.com",
+    visibility: 58,
+    visibilityTrend: -3,
+    sentiment: 76,
+    sentimentTrend: 0,
+    avgPosition: 3.8,
+  },
+  {
+    rank: 5,
+    brand: "Live Infinitely",
+    domain: "liveinfinitely.com",
+    visibility: 45,
+    visibilityTrend: 4,
+    sentiment: 82,
+    sentimentTrend: 2,
+    avgPosition: 4.5,
+  },
+]
+
+export const visibilityTrendsData: VisibilityTrendData[] = [
+  {
+    date: "Jun 28",
+    Vivora: 70,
+    Trideer: 69,
+    "Your Brand": 60,
+    URBNFit: 60,
+    "Live Infinitely": 42,
+  },
+  {
+    date: "Jun 29",
+    Vivora: 71,
+    Trideer: 68,
+    "Your Brand": 61,
+    URBNFit: 59,
+    "Live Infinitely": 44,
+  },
+  {
+    date: "Jun 30",
+    Vivora: 72,
+    Trideer: 68,
+    "Your Brand": 62,
+    URBNFit: 58,
+    "Live Infinitely": 45,
+  },
+]
+
+export const competitorColors = {
+  Vivora: "#FF7D55",
+  Trideer: "#FB7D5C",
+  "Your Brand": "#DE7053",
+  URBNFit: "#B86048",
+  "Live Infinitely": "#F0A490",
+}
+
+export const mockQueries: Query[] = [
+  { id: "q1", query: "best ergonomic office chair for back pain", position: 3, engine: "ChatGPT", snippetId: "snip1" },
+  { id: "q2", query: "balance ball chair reviews 2025", position: 1, engine: "Perplexity", snippetId: "snip2" },
+  { id: "q3", query: "office chair for posture improvement", position: 5, engine: "Gemini", snippetId: "snip3" },
+  { id: "q4", query: "yoga ball chair benefits and drawbacks", position: 2, engine: "ChatGPT", snippetId: "snip4" },
+  {
+    id: "q5",
+    query: "ergonomic seating solutions for home office",
+    position: 7,
+    engine: "Perplexity",
+    snippetId: "snip5",
+  },
+  {
+    id: "q6",
+    query: "stability ball chair vs regular office chair",
+    position: 4,
+    engine: "Gemini",
+    snippetId: "snip6",
+  },
+]
+
+export const mockRecommendations: Recommendation[] = [
+  {
+    id: "r1",
+    title: "Add 'lumbar support' and 'posture correction' to product bullets",
+    impact: "High",
+    snippetId: "snip1",
+  },
+  {
+    id: "r2",
+    title: "Optimize title with high-volume search terms: 'ergonomic', 'back pain relief'",
+    impact: "High",
+    snippetId: "snip2",
+  },
+  {
+    id: "r3",
+    title: "Add lifestyle images showing product in home office setting (currently 3, recommended 7+)",
+    impact: "Medium",
+    snippetId: "snip3",
+  },
+  {
+    id: "r4",
+    title: "Include comparison chart with traditional office chairs in A+ content",
+    impact: "Medium",
+    snippetId: "snip4",
+  },
+  {
+    id: "r5",
+    title: "Add video demonstration of assembly and usage",
+    impact: "High",
+    snippetId: "snip5",
+  },
+]
+
+export const engineDistributionData: EngineDistribution[] = [
+  { name: "ChatGPT", value: 45, fill: "#FF7D55" },
+  { name: "Perplexity", value: 35, fill: "#B86048" },
+  { name: "Gemini", value: 20, fill: "#EECBC2" },
+]
+
+export const scoreOverTimeData: ScoreData[] = [
+  { date: "Oct 1", score: 52 },
+  { date: "Oct 5", score: 55 },
+  { date: "Oct 8", score: 58 },
+  { date: "Oct 10", score: 60 },
+  { date: "Oct 13", score: 59 },
+  { date: "Oct 15", score: 61 },
+  { date: "Oct 17", score: 62 },
+]
+
